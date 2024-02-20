@@ -1,0 +1,7 @@
+{%for port in port_list_result.stdout_lines %}
+/configure port {{ port }} ethernet mtu 9212
+/configure port {{ port }} ethernet lldp dest-mac nearest-bridge tx-mgmt-address system 
+/configure port {{ port }} ethernet lldp dest-mac nearest-bridge admin-status tx-rx
+/configure port {{ port }} ethernet lldp dest-mac nearest-bridge tx-tlvs port-desc sys-name sys-desc sys-cap
+/configure port {{ port }} ethernet lldp dest-mac nearest-bridge notification
+{% endfor %}

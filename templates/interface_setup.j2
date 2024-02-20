@@ -1,0 +1,7 @@
+{% for interface in interface_list.stdout_lines %}
+/configure router interface {{ interface }} bfd 100 multiplier 3 receive 100 
+/configure router ldp interface-parameters interface {{ interface }} bfd-enable ipv4
+/configure router rsvp interface {{ interface }} bfd-enable 
+/configure router mpls interface {{ interface }}
+/configure router isis interface {{ interface }} bfd-enable ipv4
+{% endfor %}

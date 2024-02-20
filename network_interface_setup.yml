@@ -1,0 +1,30 @@
+---
+
+#get port
+-
+  name: Gather Network ports. 
+  hosts: core
+  gather_facts: false
+  tasks:
+    - name: Send command > // show router interface
+      ansible.netcommon.cli_command:
+        command: "show router interface"
+      register: interface_result
+      
+    - name: Parse For Network interfaces
+      ansible.builtin.raw: python3 /home/stieg/ansible/scripts/network_interfaces.py "{{ interface_result.stdout_lines }}"
+      delegate_to: localhost
+      register: interface_list
+      
+    - name: Generate Jinja2 interface configuration 
+      ansible.builtin.template:
+        src: /home/stieg/ansible/templates/interface_setup.j2
+        dest: /home/stieg/ansible/interface_config.j2
+    
+      delegate_to: localhost
+    
+    - name: Send config
+      ansible.netcommon.cli_command:
+        command: "{{ lookup('template', '/home/stieg/ansible/templates/interface_setup.j2') }}"
+      vars:
+        ansible_command_timeout: 60

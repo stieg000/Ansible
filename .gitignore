@@ -1,0 +1,5 @@
+notes_to_self.txt
+ansible.cfg
+/home/stieg/ansible/group_vars/
+/home/stieg/ansible/host_vars/
+hosts

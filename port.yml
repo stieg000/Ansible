@@ -1,0 +1,34 @@
+---
+
+#get port
+-
+  name: Gather ports and parse with Python
+  hosts: core
+  gather_facts: false
+  tasks:
+
+    - name: Send command > // show port
+      ansible.netcommon.cli_command:
+        command: "show port"
+      register: port_result
+      vars:
+        ansible_command_timeout: 60
+      
+    - name: Parse For Breakout Ports
+      ansible.builtin.raw: python3 /home/stieg/ansible/scripts/port.py "{{port_result.stdout_lines}}"
+      delegate_to: localhost
+      register: port_list_result
+      
+    - name: Generate Jinja2 configuration 
+      ansible.builtin.template:
+        src: /home/stieg/ansible/templates/lldp.j2
+        dest: /home/stieg/ansible/lldp_config.j2
+    
+      delegate_to: localhost
+    
+    - name: Send config
+      ansible.netcommon.cli_command:
+        command: "{{ lookup('template', '/home/stieg/ansible/templates/lldp.j2') }}"
+      vars:
+        ansible_command_timeout: 60
+

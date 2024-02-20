@@ -1,0 +1,23 @@
+---
+#send config
+
+- name: send network qos config
+  hosts: core
+  gather_facts: false
+  tasks:
+    - name: Read QoS commands from file
+      set_fact:
+        qos_commands: "{{ lookup('file', '/home/stieg/ansible/configs/qos_config.txt').split('\n') }}"
+
+#    - name: debug
+#      debug:
+#        var: qos_commands
+        
+    - name: Send QoS config commands
+      ansible.netcommon.cli_command:
+        command: "{{ item }}"
+      loop: "{{ qos_commands }}"
+      register: qos_results
+
+
+
