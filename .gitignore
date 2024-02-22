@@ -3,3 +3,5 @@ ansible.cfg
 /home/stieg/ansible/group_vars/
 /home/stieg/ansible/host_vars/
 hosts
+lldp_config.j2
+interface_config.j2
